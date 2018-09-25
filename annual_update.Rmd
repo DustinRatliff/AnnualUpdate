@@ -1,0 +1,415 @@
+---
+title: "Warren County Community Health Assessment 2018 Update"
+author: "Prepared by the Warren County Health District"
+date: "September 8, 2018"
+output:
+   word_document:
+    fig_height: 4.5
+    fig_width: 6
+    reference_docx: template/wchd-word-template.docx
+graphics: yes
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = TRUE)
+
+year <- 2016
+county <- "Warren"
+state <- "OH"
+
+source("00_Setup.R")
+source("10_Import.R")
+source("20_tidy.R")
+source("30_transform.R")
+source("40_visualize_census.R")
+```
+
+<br>
+
+`r include_graphics("template/graphics/socioeconomic_small.png")`
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+`r include_graphics("template/graphics/logo.png")`
+
+\newline
+
+#### A report prepared to supplement the 2016 Warren County Community Health Assessment
+
+##### 
+
+# Introduction
+
+Social Determinants of Health are the conditions that affect quality of life, health, functioning, and risks in a community. social Determinants of Health impact where people live, work, and play, even if people are not aware of their influence.
+
+The annual update to the _Warren County Community Health Assessment 2016_ utilizes data to describe how the environment in Warren County has changed over the last year and how areas of the county have changed in relation to one another. This report will describe the five categories of the social determinants of health as described in Healthy People 2020. These categories are Social and Community Context, Economic Stability, Health and Health Care, Education, and Neighborhood and Built Environment.
+
+## Intracounty Comparisons
+
+The social determinants of health are evaluated at the intracounty level to draw comparisons between the differing areas of Warren County. Census Tract-level data is used for mapping to see how areas compare to one another. In order to generate tables that can be understood, census tracts have been combined into a series of geographical areas that are similar to one another. The result is 7 different areas that are similar in culture and population size.
+
+`r include_graphics("maps/county_areas_map.png")`
+
+##### 
+
+`r include_graphics("template/graphics/icons/social_and_community_context.png")`
+
+# Social and Community Context
+
+Social and community context includes the social settings in which people live and act. It includes social relationships and the social, religious, cultural, and occupational institutions with which they interact. An important aspect of an individual's social context is the sense of cohesion and interpersonal trust among community members and an individual's sense that they belong and are supported in their community. Social cohesion is strongly influenced by racial discrimination and inequality.
+
+
+## Population
+
+Understanding the populations of the different areas of the county allows one to understand where populations are distributed throughout the county. These data provide context for the locations where the population resides in the county.
+
+### Map
+
+```{r population}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "population_map.png", sep="_"), sep=""))
+```
+
+#####
+
+### Chart
+
+```{r}
+print(population_chart)
+```
+
+### Table
+
+```{r}
+population_table %>% 
+flextable() %>% 
+add_header(Area = paste("Table 1.1", "Population  in", county, "County,", state, "in", year, "by County Area")) %>% 
+  display(col_key = "Percentage", 
+          pattern= "{{Percentage}}", 
+          formatters = list(Percentage ~ sprintf("%.01f", Percentage) )) %>%
+    display(col_key = "Population", 
+          pattern= "{{Population}}", 
+          formatters = list(Population ~ sprintf("%.00f", Population) )) %>%
+  merge_at(part = "header", i=1, j=1:3) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit()
+
+```
+
+##### 
+
+## Race and Ethnicity
+
+Some racial and ethnic minority populations experience health disparities and problems at disproportionately higher rates than majority populations. Understanding the geographical and proportional distribution of minority populations allows services and programs to be targeted in a manner that is culturally and linguistically appropriate.
+
+### Map
+
+```{r race}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "race_map.png", sep="_"), sep=""))
+```
+
+### Table
+
+```{r race table}
+race_table %>% 
+flextable() %>% 
+add_header(Race = paste("Table 1.2", "Population by Race in", county, "County,", state, "in", year, "by County Area")) %>% 
+  display(col_key = "Percentage", 
+          pattern= "{{Percentage}}", 
+          formatters = list(Percentage ~ sprintf("%.02f", Percentage) )) %>%
+    display(col_key = "Count", 
+          pattern= "{{Count}}", 
+          formatters = list(Count ~ sprintf("%.00f", Count) )) %>%
+  merge_at(part = "header", i=1, j=1:3) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit()
+```
+
+
+##### 
+
+## Gini Coefficient of Income Inequality
+
+The Gini coefficient is a measure of statistical dispecrsion that can be used to represent the wealth distribution of a population. Most commonly this measurement is used to identify areas of inequality. A Gini coefficient of 1 is complete income inequality, where one person has all of the income and everyone else has none. A Gini coefficient of 0 is complete equaltiy where everyone has the same income.
+
+### Map
+
+```{r gini}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "gini_map.png", sep="_"), sep=""))
+```
+
+#####
+
+### Chart
+
+```{r gini chart}
+print(gini_chart)
+```
+
+### Table
+
+```{r gini table}
+gini_table %>%
+flextable() %>%
+add_header(Area = paste("Table 1.3", "Gini Coefficeint of Income Inequality by County Area", county, "County,", state, "in", year, "by County Area")) %>%
+
+  merge_at(part = "header", i=1, j=1:2) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit()
+
+
+```
+
+#####
+
+`r include_graphics("template/graphics/icons/economic_stability.png")`
+
+# Economic Stability
+
+Economic stability is the state or condition of having adequate money, goods, and means of support. Economic stability includes measures such as poverty, employment status, food security and housing stability.
+
+## Median Income
+
+Median income is the amount that divides the income distribution into equal amounts. Half of all incomes are below the median, and half are above the median. Median family income is the income of the householder and all other individuals older than 15 who are related to the householder. Median family income is usually higher than median household income because many households consist of only one person. Median family income is an indicator of the general socioeconomic status of a community.
+
+### Map
+
+```{r income}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "income_map.png", sep="_"), sep=""))
+```
+
+#####
+
+### Chart
+
+```{r income chart}
+print(income_chart)
+```
+
+### Table
+
+```{r income table}
+income_table %>% 
+flextable() %>% 
+      display(col_key = "Income", 
+          pattern= "{{Income}}", 
+          formatters = list(Income ~ sprintf("%.00f", Income) )) %>%
+add_header(Area = paste("Table 2.1", "Population  in", county, "County,", state, "in", year, "by County Area")) %>% 
+  merge_at(part = "header", i=1, j=1:2) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit()
+```
+
+##### 
+
+## Poverty
+
+Poverty has a close association with health. Individuals with low incomes are more likely to have limitations with routine activities due to chronic illness, are more likely to be obese, and have elevated blood lead levels. The income to poverty ratio is the proportion of people andfamilies whose incomes fall below a poverty threshold, adjusted
+for family size. If income is half of the threshold, the family is at 50% poverty. Poverty is one of the social determinants of healthand interacts with health in a number of ways. A community’s income to poverty ratio is one way to assess its overall level of health. 
+
+### Map
+
+```{r poverty}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "poverty_map.png", sep="_"), sep=""))
+```
+
+#####
+
+### Chart
+
+```{r poverty chart}
+print(poverty_chart)
+```
+
+### Table
+
+```{r poverty table}
+knitr::kable(poverty_table,
+             caption = paste("Poverty by County Area", county, "County,", state, "in", year), 
+             format="pandoc")
+
+poverty_table %>% 
+flextable() %>% 
+add_header(Area = paste("Table 2.2", "Poverty by County Area in", county, "County,", state, "in", year, "by County Area")) %>% 
+  display(col_key = "Percentage", 
+          pattern= "{{Percentage}}", 
+          formatters = list(Percentage ~ sprintf("%.02f", Percentage) )) %>%
+      display(col_key = "Population", 
+          pattern= "{{Population}}", 
+          formatters = list(Population ~ sprintf("%.00f", Population) )) %>%
+  display(col_key = "Count", 
+          pattern= "{{Count}}", 
+          formatters = list(Count ~ sprintf("%.00f", Count) )) %>%
+  merge_at(part = "header", i=1, j=1:3) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit()
+
+
+```
+
+#####
+
+`r include_graphics("template/graphics/icons/health_and_healthcare.png")`
+
+# Health and Healthcare
+
+Most people need medical care at some time in their lives. Access to affordable, quality health care is important to physical, social, and mental health. Health insurance helps individuals and families access needed primary care, specialists, and emergency care, but does not ensure access on its own-it is also necessary for providers to offer affordable care, be available to treat patients, and be in relatively close proximity to patients.
+
+## Insurance
+
+Access to health care coverage is impacted by medical insurance coverage. Lack of insurance can lead to not getting needed preventive care, or not seeking care in a timely manner. Healthy People 2020 objective AHS-1 calls for 100%
+health care coverage.
+
+### Map
+
+```{r insurance}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "no_health_insurance_map.png", sep="_"), sep=""))
+```
+
+#####
+
+### Chart
+
+```{r insurance chart}
+print(no_health_insurance_chart)
+```
+
+### Table
+
+```{r insurance table}
+
+knitr::kable(no_health_insurance_table,
+             caption = paste(
+                                "Percentage of Population with No Health Insurance", county, "County,", state, "in", year), 
+             format="pandoc")
+
+```
+
+##### 
+
+`r include_graphics("template/graphics/icons/neighborhood_and_built_environment.png")`
+
+# Neighborhood and Built Environment
+
+Neighborhood and built environments have health impacts for the people who live there. Aspects of neighborhood environments include walkability, land use mix and urbanity, retail, recreational areas, restaurants, fast food outlets, cultural and education institutions, and pollution, such as from traffic or waste sites. HealthyPeople2020 classifies neighborhood and built environment factors into these four categories
+
+## Owner-Occupied Housing
+
+People who own their own home are more likely to be in a stable housing arrangement. Home ownership is associated with
+educational achievement, civic participation, greater levels of well-being, and less likelihood of being a victim of crime.
+
+### Map
+
+```{r housing}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "own_house_map.png", sep="_"), sep=""))
+
+```
+
+#####
+
+### Chart
+
+```{r housing chart}
+print(own_house_chart)
+
+```
+
+### Table
+
+```{r housing table}
+knitr::kable(own_house_table,
+             caption = paste(
+                                "Percentage of Owner-Occupied Housing Units in", county, "County,", state, "in", year), 
+             format="pandoc")
+
+```
+
+## New Houses
+
+Newer housing stock indicates development in an area and a greater likelihood that the houses are made with safer materials and are less liekly to contain harmful chemicals. Houses that are 15 years or older are more likely to need costly repairs.
+
+### Map
+
+```{r new}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "new_house_map.png", sep="_"), sep=""))
+
+```
+
+#####
+
+### Chart
+
+```{r new house chart}
+print(new_house_chart)
+
+```
+
+### Table
+
+```{r new house table}
+knitr::kable(new_house_table,
+             caption = paste(
+                                "County of New Housing Units in", county, "County,", state, "in", year), 
+             format="pandoc")
+
+```
+
+##### 
+
+`r include_graphics("template/graphics/icons/education.png")`
+
+# Education
+
+The amount of education a person has is often called "educational attainment" in academic literature. Just as education and educational attainment can effect health outcomes, a person's health can affect the amount of education that he or she is able to attain. The CDC reports that "Health-related factors such as hunger, physical and emotional abuse, and chronic illness can lead to poor school performance".
+
+## Educational Attainment
+
+Higher educational attainment is associated with better health outcomes. Education impacts health literacy, knowledge, and behaviors, improves income and work conditions, and contributes to social support and a sense of control.
+
+### Map
+
+```{r education}
+knitr::include_graphics(paste("maps/", paste(year, county, state, "educational_attainment_map.png", sep="_"), sep=""))
+```
+
+#####
+
+### Chart
+
+```{r education chart}
+print(educational_attainment_chart)
+```
+
+### Table
+
+```{r education table}
+kable(educational_attainment_table,
+                caption = paste( "Educational Attainment in", county, "County,", state, "in", year), format="pandoc")
+```
+
+
