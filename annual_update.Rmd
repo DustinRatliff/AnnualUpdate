@@ -1,7 +1,7 @@
 ---
-title: "Warren County Community Health Assessment 2018 Update"
+title: "Warren County Community Health Assessment 2017 Update"
 author: "Prepared by the Warren County Health District"
-date: "September 8, 2018"
+date: "September 1, 2017"
 output:
    word_document:
     fig_height: 4.5
@@ -15,7 +15,7 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = TRUE)
 
-year <- 2016
+year <- 2015
 county <- "Warren"
 state <- "OH"
 
@@ -24,6 +24,7 @@ source("10_Import.R")
 source("20_tidy.R")
 source("30_transform.R")
 source("40_visualize_census.R")
+source("51_crime.R")
 ```
 
 <br>
@@ -117,7 +118,8 @@ add_header(Area = paste("Table 1.1", "Population  in", county, "County,", state,
           formatters = list(Population ~ sprintf("%.00f", Population) )) %>%
   merge_at(part = "header", i=1, j=1:3) %>%
   theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
-      autofit()
+      autofit()%>%
+  flextable::width(j= ~Area, width = 2)
 
 ```
 
@@ -133,6 +135,8 @@ Some racial and ethnic minority populations experience health disparities and pr
 knitr::include_graphics(paste("maps/", paste(year, county, state, "race_map.png", sep="_"), sep=""))
 ```
 
+#####
+
 ### Table
 
 ```{r race table}
@@ -147,7 +151,8 @@ add_header(Race = paste("Table 1.2", "Population by Race in", county, "County,",
           formatters = list(Count ~ sprintf("%.00f", Count) )) %>%
   merge_at(part = "header", i=1, j=1:3) %>%
   theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
-      autofit()
+      autofit()%>%
+  flextable::width(j= ~Race, width = 4)
 ```
 
 
@@ -180,9 +185,8 @@ add_header(Area = paste("Table 1.3", "Gini Coefficeint of Income Inequality by C
 
   merge_at(part = "header", i=1, j=1:2) %>%
   theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
-      autofit()
-
-
+      autofit()%>%
+  flextable::width(j= ~Area, width = 3)
 ```
 
 #####
@@ -222,7 +226,8 @@ flextable() %>%
 add_header(Area = paste("Table 2.1", "Population  in", county, "County,", state, "in", year, "by County Area")) %>% 
   merge_at(part = "header", i=1, j=1:2) %>%
   theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
-      autofit()
+      autofit()%>%
+  flextable::width(j= ~Area, width = 2)
 ```
 
 ##### 
@@ -249,10 +254,6 @@ print(poverty_chart)
 ### Table
 
 ```{r poverty table}
-knitr::kable(poverty_table,
-             caption = paste("Poverty by County Area", county, "County,", state, "in", year), 
-             format="pandoc")
-
 poverty_table %>% 
 flextable() %>% 
 add_header(Area = paste("Table 2.2", "Poverty by County Area in", county, "County,", state, "in", year, "by County Area")) %>% 
@@ -265,10 +266,10 @@ add_header(Area = paste("Table 2.2", "Poverty by County Area in", county, "Count
   display(col_key = "Count", 
           pattern= "{{Count}}", 
           formatters = list(Count ~ sprintf("%.00f", Count) )) %>%
-  merge_at(part = "header", i=1, j=1:3) %>%
+  merge_at(part = "header", i=1, j=1:4) %>%
   theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
-      autofit()
-
+      autofit()%>%
+  flextable::width(j= ~Area, width = 2)
 
 ```
 
@@ -302,11 +303,22 @@ print(no_health_insurance_chart)
 ### Table
 
 ```{r insurance table}
-
-knitr::kable(no_health_insurance_table,
-             caption = paste(
-                                "Percentage of Population with No Health Insurance", county, "County,", state, "in", year), 
-             format="pandoc")
+no_health_insurance_table %>% 
+flextable() %>% 
+add_header(Area = paste("Table 3.1", "Percentage of Uninsused by County Area in", county, "County,", state, "in", year, "by County Area")) %>% 
+  display(col_key = "Percentage", 
+          pattern= "{{Percentage}}", 
+          formatters = list(Percentage ~ sprintf("%.02f", Percentage) )) %>%
+      display(col_key = "Population", 
+          pattern= "{{Population}}", 
+          formatters = list(Population ~ sprintf("%.00f", Population) )) %>%
+  display(col_key = "Count", 
+          pattern= "{{Count}}", 
+          formatters = list(Count ~ sprintf("%.00f", Count) )) %>%
+  merge_at(part = "header", i=1, j=1:4) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit()%>%
+  flextable::width(j= ~Area, width = 2)
 
 ```
 
@@ -342,12 +354,33 @@ print(own_house_chart)
 ### Table
 
 ```{r housing table}
-knitr::kable(own_house_table,
-             caption = paste(
-                                "Percentage of Owner-Occupied Housing Units in", county, "County,", state, "in", year), 
-             format="pandoc")
+own_house_table %>% 
+flextable() %>% 
+   set_header_labels(Area = "Area", 
+                    OwnHouse = "Owner-Occupied Houses", 
+                    AllHouses = "Total Houses", 
+                    Percentage = "Percetage") %>%
+add_header(Area = paste("Table 4.1", "Percentage of Owner-Occupied Housing Units in", county, "County,", state, "in", year, "by County Area")) %>% 
+  display(col_key = "Percentage", 
+          pattern= "{{Percentage}}", 
+          formatters = list(Percentage ~ 
+                              sprintf("%.02f", Percentage) )) %>%
+      display(col_key = "AllHouses", 
+          pattern= "{{AllHouses}}", 
+          formatters = list(AllHouses ~ 
+                              sprintf("%.00f", AllHouses) )) %>%
+  display(col_key = "OwnHouse", 
+          pattern= "{{OwnHouse}}", 
+          formatters = list(OwnHouse ~ 
+                              sprintf("%.00f", OwnHouse) )) %>%
+  merge_at(part = "header", i=1, j=1:4) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit()%>%
+  flextable::width(j= ~Area, width = 2)
 
 ```
+
+#####
 
 ## New Houses
 
@@ -372,12 +405,126 @@ print(new_house_chart)
 ### Table
 
 ```{r new house table}
-knitr::kable(new_house_table,
-             caption = paste(
-                                "County of New Housing Units in", county, "County,", state, "in", year), 
-             format="pandoc")
+target_county %>%
+  as.tibble() %>% 
+  select(area, B25034_001E, B25034_002E, B25034_003E, B25034_004E) %>%
+  mutate(Old = (B25034_001E-(B25034_002E+ B25034_003E+ B25034_004E))) %>%
+  select(area, Old, B25034_002E, B25034_003E, B25034_004E) %>%
+  # rename("Built Before 2000" = Old) %>%
+  # rename("Built 2000 to 2009" = B25034_004E) %>%
+  # rename("Built 2010 to 2013" = B25034_003E) %>%
+  # rename("Built 2014 or Later" = B25034_002E) %>%
+  gather(key = Year, value = Count, -area) %>%
+  group_by(area, Year) %>%
+  summarise(Count = sum(Count)) %>%
+  rename(Area = area) %>%
+  spread(key = Year, value = Count) %>%
+  flextable()%>% 
+   set_header_labels(Area = "Area", 
+                    B25034_002E = "Built 2014 or Later", 
+                    B25034_003E = "Built 2010 to 2013", 
+                    B25034_004E = "Built 2000 to 2009",
+                    Old = "Built Before 2000") %>%
+add_header(Area = paste("Table 4.2", "Age of Housing Units in", county, "County,", state, "in", year, "by County Area")) %>% 
+  
+
+      display(col_key = "B25034_002E", 
+          pattern= "{{B25034_002E}}", 
+          formatters = list(B25034_002E ~ 
+                              sprintf("%.00f", B25034_002E) )) %>%
+  
+        display(col_key = "B25034_003E", 
+          pattern= "{{B25034_003E}}", 
+          formatters = list(B25034_003E ~ 
+                              sprintf("%.00f", B25034_003E) )) %>%
+  
+          display(col_key = "B25034_004E", 
+          pattern= "{{B25034_004E}}", 
+          formatters = list(B25034_004E ~ 
+                              sprintf("%.00f", B25034_004E) )) %>%
+  
+          display(col_key = "Old", 
+          pattern= "{{Old}}", 
+          formatters = list(Old ~ 
+                              sprintf("%.00f", Old) )) %>%  
+
+  merge_at(part = "header", i=1, j=1:5) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit() %>%
+  flextable::width(j= ~Area, width = 2)
+  
+  
+  
 
 ```
+
+#####
+
+## Crime
+
+Crime and violence are aspects of the neighborhood and built environments that impact overall health. A sense of security and well-being is an important social determinant of health.
+
+```{r crime table}
+crime_table %>% 
+flextable() %>% 
+  set_header_labels(Geography = "Geography", 
+                    population_1 = "Population", 
+                    property_crime = "# of Property Crimes", 
+                    property_crime_rate = "Property Crime Rate", 
+                    violent_crime = "# of Violent Crimes",
+                    violent_crime_rate = "Violent Crime Rate") %>%
+  add_header(Geography = 
+               paste("Table 4.3", "Crime in", county, "County,",
+                     state, "in", year)) %>% 
+  display(col_key = "property_crime_rate",
+          pattern= "{{property_crime_rate}}",
+          formatters = 
+            list(property_crime_rate ~ 
+                   sprintf("%.01f", property_crime_rate) )) %>%
+  display(col_key = "violent_crime_rate", 
+          pattern= "{{violent_crime_rate}}", 
+          formatters = 
+            list(violent_crime_rate ~ 
+                   sprintf("%.01f", violent_crime_rate) )) %>%
+    display(col_key = "population_1", 
+          pattern= "{{population_1}}", 
+          formatters = 
+            list(population_1 ~ 
+                   sprintf("%.00f", population_1) )) %>%
+  
+  merge_at(part = "header", i=1, j=1:6) %>%
+  theme_zebra(odd_header = "transparent", 
+              even_header = "transparent") %>%
+      autofit() %>%
+  flextable::width(width = 1)
+```
+
+#####
+
+### Property Crime
+
+Property crime includes household burglary, motor vehicle and property theft.
+
+
+``` {r property crime}
+knitr::include_graphics(paste("charts/", paste(year, county, state, "property_crime_graph.png", sep="_"), sep=""))
+
+```
+
+#####
+
+### Violent Crime
+
+Violent crime involves force or the threat of force and includes murder, rape and sexual assault, robbery, aggravated assault, and assault.
+
+```{r violent crime}
+knitr::include_graphics(paste("charts/", paste(year, county, state, "violent_crime_graph.png", sep="_"), sep=""))
+
+```
+
+
+
+
 
 ##### 
 
@@ -408,8 +555,24 @@ print(educational_attainment_chart)
 ### Table
 
 ```{r education table}
-kable(educational_attainment_table,
-                caption = paste( "Educational Attainment in", county, "County,", state, "in", year), format="pandoc")
+educational_attainment_table %>%
+  rename("Education" = `Educational Attainment`) %>%
+flextable() %>% 
+
+add_header(Education = paste("Table 5.1", "Educational Attainment in", county, "County,", state, "in", year, "by County Area")) %>% 
+  display(col_key = "Percentage", 
+          pattern= "{{Percentage}}", 
+          formatters = list(Percentage ~ sprintf("%.02f", Percentage) )) %>%
+
+  display(col_key = "Count", 
+          pattern= "{{Count}}", 
+          formatters = list(Count ~ sprintf("%.00f", Count) )) %>%
+  merge_at(part = "header", i=1, j=1:3) %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+      autofit() %>%
+  flextable::width(j= ~Education, width = 3)
+
+
 ```
 
 

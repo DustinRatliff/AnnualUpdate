@@ -427,7 +427,9 @@ no_health_insurance_table <- target_county %>%
   summarise_all(funs(sum)) %>%
   mutate(Percentage = NoInsurance/B27001_001E*100) %>%
   mutate(Percentage = round(Percentage, digits = 2)) %>%
-  select(Area, Percentage)
+  rename(Count = NoInsurance) %>%
+  rename(Population = B27001_001E) %>%
+  select(Area, Count, Population, Percentage)
 
 ###Chart
 no_health_insurance_chart <- no_health_insurance_table %>%
@@ -609,8 +611,10 @@ own_house_table <- target_county %>%
   summarise_all(funs(sum)) %>%
   mutate(Percentage = OwnHouse/B25106_001E*100) %>%
   mutate(Percentage = round(Percentage, digits=1)) %>%
-  select(area, Percentage) %>%
-  rename(Area = area)
+
+  rename(AllHouses = B25106_001E) %>%
+  select(area, OwnHouse, AllHouses, Percentage) %>%
+  rename(Area = area) 
 
 ###Chart
 own_house_chart <- own_house_table %>%
@@ -659,11 +663,9 @@ new_house_table <- target_county %>%
   rename("Built 2000 to 2009" = B25034_004E) %>%
   rename("Built 2010 to 2013" = B25034_003E) %>%
   rename("Built 2014 or Later" = B25034_002E) %>%
-  
   gather(key = Year, value = Count, -area) %>%
   group_by(area, Year) %>%
   summarise(Count = sum(Count)) %>%
-  
   rename(Area = area)
 
 
@@ -673,7 +675,7 @@ new_house_chart <- new_house_table %>%
   
   ggplot(aes(x=Area, y=Count, fill=Year)) +
   geom_bar(stat="identity", position="dodge") +
-  geom_text(aes(label=Count)) +
+  #geom_text(aes(label=Count)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   chart_theme() +
   labs(title = "Count of New Housing Units by County Area",
