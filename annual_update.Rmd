@@ -7,6 +7,9 @@ output:
     fig_height: 4.5
     fig_width: 6
     reference_docx: template/wchd-word-template.docx
+bibliography: template/bibliography.bib
+link-citations: true
+csl: template/american-journal-of-public-health.csl
 graphics: yes
 editor_options:
   chunk_output_type: console
@@ -67,7 +70,7 @@ source("51_crime.R")
 
 # Introduction
 
-Social Determinants of Health are the conditions that affect quality of life, health, functioning, and risks in a community. social Determinants of Health impact where people live, work, and play, even if people are not aware of their influence.
+Social Determinants of Health are the conditions that affect quality of life, health, functioning, and risks in a community. social Determinants of Health impact where people live, work, and play, even if people are not aware of their influence.[@HP2020]
 
 The annual update to the _Warren County Community Health Assessment 2016_ utilizes data to describe how the environment in Warren County has changed over the last year and how areas of the county have changed in relation to one another. This report will describe the five categories of the social determinants of health as described in Healthy People 2020. These categories are Social and Community Context, Economic Stability, Health and Health Care, Education, and Neighborhood and Built Environment.
 
@@ -79,11 +82,36 @@ The social determinants of health are evaluated at the intracounty level to draw
 
 ##### 
 
+## Methods
+
+This report is generated using a series of datasets from various public and non-public datasets. These data have been accessed in the most raw version of data that is available or the data was retrieved from a web API. This ensures that analyses that are conducted are being done on the original data and are not calculations based on the calculations of others.
+
+All of the code for the generation of these reports is devleoped using the R Statistical Programming Language [@R-Project] and the R Studio IDE [@R-Studio]. The code used for the devleopment of this report is available on [GitHub](https://github.com/DustinRatliff/AnnualUpdate). A copy of this report will be maintained on the Warren County Health District [website](http://warrenchd.com/document-category/assessments).
+
+### Data Analysis
+
+The data that has been compiled is analyzed using multiple methodologies. Data is first assessed to identify what information can be found in the raw information. The data then goes through the following process [@Wickham2017] :
+
+`r include_graphics("template/graphics/data-science-explore.png")`
+
+Data is summarily analyzed at the inter-county and intra-county level to identify differences. These type of analysis allow an exploration of the county for sub-county data and identify areas that are more likely to have health disparities.
+
+### Data Sets
+
+The following data sets have been used to develop this analysis:
+
+  * 2015 American Community Survey [@ACS2015]
+  * 2015 Area Health Resources Files [@AHRF2015]
+  * 1960 - 2015 Uniform Crime Reporting Program Data [@UCR2015]
+  
+
+#####
+
 `r include_graphics("template/graphics/icons/social_and_community_context.png")`
 
 # Social and Community Context
 
-Social and community context includes the social settings in which people live and act. It includes social relationships and the social, religious, cultural, and occupational institutions with which they interact. An important aspect of an individual's social context is the sense of cohesion and interpersonal trust among community members and an individual's sense that they belong and are supported in their community. Social cohesion is strongly influenced by racial discrimination and inequality.
+Social and community context includes the social settings in which people live and act. It includes social relationships and the social, religious, cultural, and occupational institutions with which they interact. An important aspect of an individual's social context is the sense of cohesion and interpersonal trust among community members and an individual's sense that they belong and are supported in their community. Social cohesion is strongly influenced by racial discrimination and inequality. [-@HP2020]
 
 
 ## Population
@@ -195,7 +223,7 @@ add_header(Area = paste("Table 1.3", "Gini Coefficeint of Income Inequality by C
 
 # Economic Stability
 
-Economic stability is the state or condition of having adequate money, goods, and means of support. Economic stability includes measures such as poverty, employment status, food security and housing stability.
+Economic stability is the state or condition of having adequate money, goods, and means of support. Economic stability includes measures such as poverty, employment status, food security and housing stability. [-@HP2020]
 
 ## Median Income
 
@@ -279,7 +307,7 @@ add_header(Area = paste("Table 2.2", "Poverty by County Area in", county, "Count
 
 # Health and Healthcare
 
-Most people need medical care at some time in their lives. Access to affordable, quality health care is important to physical, social, and mental health. Health insurance helps individuals and families access needed primary care, specialists, and emergency care, but does not ensure access on its own-it is also necessary for providers to offer affordable care, be available to treat patients, and be in relatively close proximity to patients.
+Most people need medical care at some time in their lives. Access to affordable, quality health care is important to physical, social, and mental health. Health insurance helps individuals and families access needed primary care, specialists, and emergency care, but does not ensure access on its own-it is also necessary for providers to offer affordable care, be available to treat patients, and be in relatively close proximity to patients. [-@HP2020]
 
 ## Insurance
 
@@ -328,7 +356,7 @@ add_header(Area = paste("Table 3.1", "Percentage of Uninsused by County Area in"
 
 # Neighborhood and Built Environment
 
-Neighborhood and built environments have health impacts for the people who live there. Aspects of neighborhood environments include walkability, land use mix and urbanity, retail, recreational areas, restaurants, fast food outlets, cultural and education institutions, and pollution, such as from traffic or waste sites. HealthyPeople2020 classifies neighborhood and built environment factors into these four categories
+Neighborhood and built environments have health impacts for the people who live there. Aspects of neighborhood environments include walkability, land use mix and urbanity, retail, recreational areas, restaurants, fast food outlets, cultural and education institutions, and pollution, such as from traffic or waste sites. Healthy People 2020 classifies neighborhood and built environment factors into these four categories. [-@HP2020]
 
 ## Owner-Occupied Housing
 
@@ -532,7 +560,7 @@ knitr::include_graphics(paste("charts/", paste(year, county, state, "violent_cri
 
 # Education
 
-The amount of education a person has is often called "educational attainment" in academic literature. Just as education and educational attainment can effect health outcomes, a person's health can affect the amount of education that he or she is able to attain. The CDC reports that "Health-related factors such as hunger, physical and emotional abuse, and chronic illness can lead to poor school performance".
+The amount of education a person has is often called "educational attainment" in academic literature. Just as education and educational attainment can effect health outcomes, a person's health can affect the amount of education that he or she is able to attain. The CDC reports that "Health-related factors such as hunger, physical and emotional abuse, and chronic illness can lead to poor school performance". [-@HP2020; -@RWJF_Education]
 
 ## Educational Attainment
 
@@ -575,4 +603,4 @@ add_header(Education = paste("Table 5.1", "Educational Attainment in", county, "
 
 ```
 
-
+### References
