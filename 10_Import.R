@@ -1,7 +1,7 @@
-# year <- 2016
-# county <- "Warren"
-# state <- "OH"
+# Set environment for tidycensys
 
+census_api_key("d7f13444facd6127f91279f4004d6bc413ca7218")
+options(tigris_use_cache = TRUE)
 
 # Set variables to import from Census API. load_variables(2016, "acs5", cache = TRUE) can be use dto lookup variables
 # variable_lookup <- load_variables(2016, "acs5", cache = TRUE)

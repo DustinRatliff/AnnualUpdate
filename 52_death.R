@@ -52,7 +52,7 @@ death %>%
 
 death %>%
   filter(countyc == "165") %>%
-  #filter(icdcode113 == "122") %>%
+  filter(icdcode113 == "122") %>%
   ggplot(aes(age)) +
   geom_dotplot(binwidth=1) +
 
