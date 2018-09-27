@@ -1,5 +1,5 @@
 ---
-title: "Warren County Community Health Assessment 2017 Update"
+title: "2017 Social Determinants of Health Addendum"
 author: "Prepared by the Warren County Health District"
 date: "September 1, 2017"
 output:
