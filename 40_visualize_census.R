@@ -122,7 +122,7 @@ race_map <- target_county %>%
   rename("Non-Hispanic, Multiple or Other Race" =OtherRace) %>%
   rename("Hispanic, Any Race" = Hispanic) %>%
   rename("Non-Hispanic, Any Race" = NonHispanic) %>%
-  gather(key = race, value = percentage, -GEOID, -NAME, -geometry) %>%
+  gather(key = race, value = population, -GEOID, -NAME, -geometry) %>%
   mutate(race = factor(race,levels = c(
     "Non-Hispanic, Asian",
     "Non-Hispanic, Black or African American",
@@ -131,13 +131,12 @@ race_map <- target_county %>%
     "Hispanic, Any Race",
     "Non-Hispanic, Any Race"))) %>%
   
-  mutate(percentage = percentage * 100) %>%
-  ggplot(aes(fill = percentage, color = percentage)) +
+  ggplot(aes(fill = population, color = population)) +
   facet_wrap(~ race) +
   geom_sf() +
   coord_sf(crs = 26915) +
-  scale_fill_viridis(name = "Percentage") +
-  scale_color_viridis(name = "Percentage") +
+  scale_fill_viridis(name = "Population") +
+  scale_color_viridis(name = "Population") +
   labs(title = "Population Density by Race by Census Tract",
        subtitle = bquote(.(county) ~ "County," ~ .(state) ~ .(year)),
        caption = bquote("Source:" ~ .(year) ~ "American Community Survey, U.S. Census Bureau"))+
@@ -680,3 +679,12 @@ new_house_chart <- new_house_table %>%
   chart_theme() +
   labs(title = "Count of New Housing Units by County Area",
        subtitle = bquote(.(county) ~ "County," ~ .(state) ~ .(year)))
+
+
+
+test %>% 
+  mutate(count = ifelse(race == "Hispanic, Any Race" | race =="Non-Hispanic, Any Race"), 
+         filter(race == "Hispanic, Any Race" | race =="Non-Hispanic, Any Race") %>%
+           percentage/sum(percentage %>% filter(race == "Hispanic, Any Race" | race =="Non-Hispanic, Any Race")),
+         0)
+
