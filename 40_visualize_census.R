@@ -681,10 +681,3 @@ new_house_chart <- new_house_table %>%
        subtitle = bquote(.(county) ~ "County," ~ .(state) ~ .(year)))
 
 
-
-test %>% 
-  mutate(count = ifelse(race == "Hispanic, Any Race" | race =="Non-Hispanic, Any Race"), 
-         filter(race == "Hispanic, Any Race" | race =="Non-Hispanic, Any Race") %>%
-           percentage/sum(percentage %>% filter(race == "Hispanic, Any Race" | race =="Non-Hispanic, Any Race")),
-         0)
-
